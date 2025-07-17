@@ -77,15 +77,22 @@ app.post("/summarize", async (req, res) => {
       ? `${proj.title} (${proj.language}) ${proj.link || "-"}`
       : "-";
 
-    const row = [
-      parsed.name,
-      parsed.address,
-      parsed.cgpa,
-      parsed.experience,
-      parsed.skills,
-      projectFormatted,
-      parsed["social media link"] || "-",
-    ];
+   const row = [
+  parsed.name,
+  parsed.address,
+  parsed.cgpa,
+  typeof parsed.experience === "object"
+    ? Object.entries(parsed.experience)
+        .map(([company, details]) => {
+          const { position, duration, responsibilities } = details;
+          return `${company}: ${position} (${duration}) - ${Array.isArray(responsibilities) ? responsibilities.join("; ") : "-"}`;
+        })
+        .join(" | ")
+    : parsed.experience,
+  Array.isArray(parsed.skills) ? parsed.skills.join(", ") : parsed.skills,
+  projectFormatted,
+  parsed["social media link"] || "-",
+];
 
     await appendToSheet(row);
 
