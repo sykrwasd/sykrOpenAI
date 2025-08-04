@@ -52,7 +52,7 @@ function App() {
         throw new Error(`Summary error! status: ${summaryResponse.status}`);
       }
    const { sum, message } = await summaryResponse.json();
-setAiResponse(message);
+    setAiResponse(message);
 
 
 
